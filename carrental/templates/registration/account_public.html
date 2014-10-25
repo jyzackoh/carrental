@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title%}{{ user_details.username }}'s Profile Page{% endblock %}
+
+{% block content %}
+<div class="col-md-10 col-md-offset-1">
+
+
+	{% if valid %}
+		<button class="btn" onclick="showOnly('my-account')">{{ user_details.username }}'s Profile</button>
+		<button class="btn" onclick="showOnly('my-cars')">{{ user_details.username }}'s Cars</button>
+
+		<!-- First Section -->
+		<div id="my-account">
+			<h1>{{ user_details.username }}'s Profile</h1>
+
+			<p>Username: {{ user_details.username }}</p>
+			<p>Email: {{ user_details.email }}</p><br>
+
+			<p>Contact: {{ user_details.userdetails.contact }}</p>
+			<p>License Issue Date: {{ user_details.userdetails.license_issue_date }}</p>
+		</div>
+
+		<!-- Second Section -->
+		<div id="my-cars" style="display:none">
+			<h1>{{ user_details.username }}'s Cars</h1>
+		</div>
+
+
+		<script>
+			function showOnly(id) {
+				document.getElementById('my-account').style.display = "none";
+				document.getElementById('my-cars').style.display = "none";
+				document.getElementById(id).style.display = "block";
+			}
+		</script>
+	{% else %}
+		<h1>Oh No!</h1>
+		<p><strong>{{ user_details.username }}</strong>'s profile was not found!</p>
+		<p>Please check that you searched the correct username.</p>
+	{% endif %}
+
+</div>
+
+{% endblock %}
