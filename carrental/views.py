@@ -24,13 +24,18 @@ def account(request): #This one surely must login.
     return render(request, 'registration/account.html', {'user_details': user_qrs, 'user_id': request.user})
 
 def account_public(request, username): #Public's view of person's profile
+    #If User wants to see his own profile
     if (str(request.user) == str(username)):
         return redirect('/accounts/user/')
+
     user_qrs = list(User.objects.filter(username=username))
+    
+    #No Such User
     if (len(user_qrs) == 0):
         user_qrs = {}
         user_qrs['username'] = username
         return render(request, 'registration/account_public.html', {'valid':False, 'user_details': user_qrs})    
+    
     user_qrs = user_qrs[0]
     #pass in owned cars
     #pass in rented cars
