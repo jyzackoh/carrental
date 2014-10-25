@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title%}Login Page{% endblock %}
+
+{% block content %}
+<div class="col-md-10 col-md-offset-1">
+
+	<button class="btn" onclick="showOnly('my-account')">My Account</button>
+	<button class="btn" onclick="showOnly('my-cars')">My Cars</button>
+	<button class="btn" onclick="showOnly('my-rented-cars')">Rented Cars</button>
+
+	<!-- First Section -->
+	<div id="my-account">
+		<h1>User Account</h1>
+
+		<p>Username: {{ user_details.username }}</p>
+		<p>Email: {{ user_details.email }} <button class="btn">Change Email</button></p><br>
+
+		<h1>User Details</h1>
+
+		<p>NRIC: {{ user_details.userdetails.nric }}</p>
+		<p>Birthdate: {{ user_details.userdetails.dob }}</p>
+		<p>Contact: {{ user_details.userdetails.contact }}</p>
+		<p>License Issue Date: {{ user_details.userdetails.license_issue_date }}</p>
+		<p>Address: {{ user_details.userdetails.address }} <button class="btn">Change User Details</button></p><br>
+	</div>
+
+	<!-- Second Section -->
+	<div id="my-cars" style="display:none">
+		<h1>My Cars</h1>
+	</div>
+
+
+	<!-- Third Section -->
+	<div id="my-rented-cars" style="display:none">
+		<h1>My Rented Cars</h1>
+	</div>
+	
+</div>
+
+<script>
+	function showOnly(id) {
+		document.getElementById('my-account').style.display = "none";
+		document.getElementById('my-cars').style.display = "none";
+		document.getElementById('my-rented-cars').style.display = "none";
+		document.getElementById(id).style.display = "block";
+	}
+</script>
+
+{% endblock %}

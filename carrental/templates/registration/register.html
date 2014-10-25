@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title%}Login Page{% endblock %}
+
+{% block content %}
+	<div class="col-md-6 col-md-offset-3">
+
+		<h1>Create an account</h1>
+
+		<form action="" method="post">
+			{{ form.as_p }}
+			{{ user_details_form.as_p }}
+			{% csrf_token %}
+			<input type="submit" value="Sign Me Up!">
+			<input type="hidden" name="next" value="/accounts/user" />
+		</form>
+	</div>
+{% endblock %}
