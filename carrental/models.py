@@ -27,29 +27,29 @@ class Car(models.Model):
         (SUV, 'SUV'),
     )
     
-    make_model = models.CharField(max_length=128, primary_key=True) 
-    year = models.IntegerField()    
-    max_passengers = models.IntegerField()    
+    make_model = models.CharField(max_length=128, primary_key=True)
+    max_passengers = models.IntegerField()
     transmission = models.CharField(choices=TRANSMISSION_CHOICES,
                                     max_length=2,
-                                    default=AUTOMATIC)    
-    aircon = models.BooleanField()    
+                                    default=AUTOMATIC)
+    aircon = models.BooleanField()
     type = models.CharField(choices=TYPE_CHOICES,
                             max_length=2)
     
 class CarInstance(models.Model):
     car = ForeignKey('Car', on_delete=models.CASCADE)
     colour = models.CharField(max_length=128)
-    #owner = models.ForeignKey('User', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(decimal_places=2, max_digits=10)
     candrivemy = models.BooleanField()
+    year = models.IntegerField()    
     carplate = models.CharField(max_length=16, primary_key=True)
     
 class Booking(models.Model):
     start = models.DateField()
     end = models.DateField()
     car_instance = ForeignKey('CarInstance', on_delete=models.CASCADE)
-    #borrower = ForeignKey('User', on_delete=models.CASCADE)
+    borrower = ForeignKey(User, on_delete=models.CASCADE)
     
 class UserDetails(models.Model):
     user = models.OneToOneField(User)
