@@ -1,6 +1,6 @@
 from django import forms            
 from django.contrib.auth.models import User   # fill in custom user info then save it 
-from models import UserDetails
+from models import UserDetails, CarInstance
 from django.contrib.auth.forms import UserCreationForm      
 
 class CustomRegistrationForm(UserCreationForm):
@@ -39,3 +39,29 @@ class UserDetailsForm(forms.ModelForm):
             user_details.save()
 
         return user_details
+
+
+class AddCarInstanceForm(forms.ModelForm):
+    colour = forms.CharField(required=True, max_length=128)
+    price = forms.DecimalField(required=True, decimal_places=2, max_digits=10)
+    candrivemy = forms.BooleanField(required=True)
+    carplate = forms.CharField(required=True, max_length=16)
+    year = forms.IntegerField(required=True)
+
+    class Meta:
+        model = CarInstance
+        exclude = ('car', 'owner')
+        fields = ('colour', 'price', 'candrivemy', 'carplate')
+
+    def save(self,commit=True):   
+        car_instance = super(AddCarInstanceForm, self).save(commit=False)
+        car_instance.colour = self.cleaned_data['colour']
+        car_instance.price = self.cleaned_data['price']
+        car_instance.candrivemy = self.cleaned_data['candrivemy']
+        car_instance.carplate = self.cleaned_data['carplate']
+        car_instance.year = self.cleaned_data['year']
+
+        if commit:
+            car_instance.save()
+
+        return car_instance

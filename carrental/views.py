@@ -1,9 +1,9 @@
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from forms import CustomRegistrationForm, UserDetailsForm
 from django import forms
 
 def index(request):
@@ -19,9 +19,29 @@ def car_info(request):
 def account(request): #This one surely must login.
     user_qrs = list(User.objects.filter(username=request.user))
     user_qrs = user_qrs[0]
-    #pass in owned cars
-    #pass in rented cars
-    return render(request, 'registration/account.html', {'user_details': user_qrs, 'user_id': request.user})
+
+    if request.method == 'POST': #create new user
+        form = AddCarInstanceForm(request.POST)
+        if form.is_valid():
+            car_instance = form.save(commit=False)
+            car_instance.owner = user_qrs
+            #car_instance.car = None
+            car_instance.save()
+            return HttpResponseRedirect("/accounts/user")
+    else:
+        form = AddCarInstanceForm()
+
+    return render(request, "registration/account.html", {
+        'form': form,
+        'user_details': user_qrs, 
+        'user_id': request.user,
+    })
+
+    # user_qrs = list(User.objects.filter(username=request.user))
+    # user_qrs = user_qrs[0]
+    # #pass in owned cars
+    # #pass in rented cars
+    # return render(request, 'registration/account.html', {'user_details': user_qrs, 'user_id': request.user})
 
 def account_public(request, username): #Public's view of person's profile
     #If User wants to see his own profile

@@ -28,6 +28,12 @@
 	<!-- Second Section -->
 	<div id="my-cars" style="display:none">
 		<h1>My Cars</h1>
+		<form action="" method="post">
+			{{ form.as_p }}
+			{% csrf_token %}
+			<input type="submit" value="Add My Car!">
+			<input type="hidden" name="next" value="/accounts/user" />
+		</form>
 	</div>
 
 
