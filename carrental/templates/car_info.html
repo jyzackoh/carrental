@@ -1,12 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title%}Login Page{% endblock %}
+{% block title%}Car Info{% endblock %}
 
 {% block content %} 
 <div class="col-md-10 col-md-offset-1">
 	
 	<!-- input content here -->
-	<h1>car info page</h1>
+	{% if car %}
+		{% for car_instance in car %}
+		<h1>{{ car_instance.car.make_model }}</h1>
+		<table width="100%">
+			<tr>
+				<td>Make/Model: {{ car_instance.car.make_model }}<br>
+					Max Passengers: {{ car_instance.car.max_passengers }}<br>
+	    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
+	    			Type: {{ car_instance.car.get_type_display }}<br>
+	    			Colour: {{ car_instance.colour }}<br>
+	    		</td>
+				<td>
+					Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
+	    			Carplate No.: {{ car_instance.carplate }}<br>
+	    			Year: {{ car_instance.year }}<br>
+	    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
+	    		</td>
+				<td>
+	    			Price: ${{ car_instance.price }}/month<br>
+	    			<a href="/rent/?car={{ car_instance.uuid }}"><button class="btn btn-success">Rent!</button></a>
+				</td>
+				</tr>
+				<tr><td colspan="3"><hr></td></tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h1>Car Not Found</h1>
+		<p>The Car you were looking for could not be found. Please try again!</p>
+	{% endif %}
 
 </div>
 {% endblock %}
