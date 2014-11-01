@@ -1,7 +1,9 @@
 from django import forms            
 from django.contrib.auth.models import User   # fill in custom user info then save it 
-from models import UserDetails, CarInstance
-from django.contrib.auth.forms import UserCreationForm      
+from models import UserDetails, CarInstance, Car
+from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelChoiceField
+
 
 class CustomRegistrationForm(UserCreationForm):
     #email = forms.EmailField(required=True)
@@ -39,6 +41,15 @@ class UserDetailsForm(forms.ModelForm):
             user_details.save()
 
         return user_details
+
+
+
+class MyModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return str(obj.make_model)
+
+class SelectCarForm(forms.Form):
+    car = MyModelChoiceField(queryset=Car.objects.all(), to_field_name="make_model")
 
 
 class AddCarInstanceForm(forms.ModelForm):

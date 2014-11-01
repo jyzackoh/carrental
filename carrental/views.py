@@ -1,16 +1,17 @@
-from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from models import CarInstance
 from django import forms
 
 def index(request):
 	return render(request, 'index.html', {'user_id': request.user})
 
 def search(request):
-	return render(request, 'search.html', {'user_id': request.user})
+    return render(request, 'search.html', {'user_id': request.user})
 
 def car_info(request):
 	return render(request, 'car_info.html', {'user_id': request.user})
@@ -21,18 +22,23 @@ def account(request): #This one surely must login.
     user_qrs = user_qrs[0]
 
     if request.method == 'POST': #create new user
+        car_form = SelectCarForm(request.POST)
         form = AddCarInstanceForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and car_form.is_valid():
+            car = (dict(car_form.cleaned_data))['car']
             car_instance = form.save(commit=False)
             car_instance.owner = user_qrs
-            #car_instance.car = None
+            car_instance.car = car
             car_instance.save()
-            return HttpResponseRedirect("/accounts/user")
-    else:
-        form = AddCarInstanceForm()
+
+    form = AddCarInstanceForm()
+    car_form = SelectCarForm()
+    car_instances = CarInstance.objects.filter(owner=user_qrs)
 
     return render(request, "registration/account.html", {
         'form': form,
+        'car_form': car_form,
+        'car_instances': car_instances,
         'user_details': user_qrs, 
         'user_id': request.user,
     })
