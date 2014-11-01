@@ -14,7 +14,7 @@
 		<h1>User Account</h1>
 
 		<p>Username: {{ user_details.username }}</p>
-		<p>Email: {{ user_details.email }} <button class="btn">Change Email</button></p><br>
+		<p>Email: {{ user_details.email }} <button class="btn btn-primary">Change Email</button></p><br>
 
 		<h1>User Details</h1>
 
@@ -22,18 +22,48 @@
 		<p>Birthdate: {{ user_details.userdetails.dob }}</p>
 		<p>Contact: {{ user_details.userdetails.contact }}</p>
 		<p>License Issue Date: {{ user_details.userdetails.license_issue_date }}</p>
-		<p>Address: {{ user_details.userdetails.address }} <button class="btn">Change User Details</button></p><br>
+		<p>Address: {{ user_details.userdetails.address }} <button class="btn btn-primary">Change User Details</button></p><br>
 	</div>
 
 	<!-- Second Section -->
 	<div id="my-cars" style="display:none">
 		<h1>My Cars</h1>
-		<form action="" method="post">
-			{{ form.as_p }}
-			{% csrf_token %}
-			<input type="submit" value="Add My Car!">
-			<input type="hidden" name="next" value="/accounts/user" />
-		</form>
+		<button class="btn btn-primary" onclick="toggleAddCarForm()">Add A Car!</button>
+		<div id="add_car_form" style="display:none">
+			<br>
+			<form action="" method="post">
+				{{ car_form.as_p }}
+				{{ form.as_p }}
+				{% csrf_token %}
+				<input type="submit" value="Add My Car!">
+				<input type="hidden" name="next" value="/accounts/user" />
+			</form>
+		</div>
+
+		<hr>
+		<table width="100%">
+		{% for car_instance in car_instances %}
+		<tr>
+			<td>Make/Model: {{ car_instance.car.make_model }}<br>
+				Max Passengers: {{ car_instance.car.max_passengers }}<br>
+    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
+    			Type: {{ car_instance.car.get_type_display }}<br>
+    			Colour: {{ car_instance.colour }}<br>
+    		</td>
+			<td>
+				Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
+    			Carplate No.: {{ car_instance.carplate }}<br>
+    			Year: {{ car_instance.year }}<br>
+    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
+    		</td>
+			<td>
+    			Price: ${{ car_instance.price }}/month<br>
+    			<a href="/delete/CARUUIDHERE"><button class="btn btn-danger">Remove</button></a>
+			</td>
+			</tr>
+			<tr><td colspan="3"><hr></td></tr>
+		{% endfor %}
+		</table>
 	</div>
 
 
@@ -50,6 +80,16 @@
 		document.getElementById('my-cars').style.display = "none";
 		document.getElementById('my-rented-cars').style.display = "none";
 		document.getElementById(id).style.display = "block";
+	}
+
+	function toggleAddCarForm() {
+		var addCarForm = document.getElementById('add_car_form');
+		var visibility = addCarForm.style.display;
+		if (visibility === 'none') {
+			addCarForm.style.display = 'block';
+		} else {
+			addCarForm.style.display = 'none';
+		}
 	}
 </script>
 
