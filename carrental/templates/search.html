@@ -16,9 +16,9 @@
 			</form>
 		</div>
 
-		{% for car_instance in cars %}
-		<a href="/car/?id={{ car_instance.uuid }}"><h1>{{ car_instance.car.make_model }}</h1></a>
 		<table width="100%">
+			{% for car_instance in cars %}
+			<tr><td><a href="/car/?id={{ car_instance.uuid }}"><h1>{{ car_instance.car.make_model }}</h1></a></td></tr>
 			<tr>
 				<td>Make/Model: {{ car_instance.car.make_model }}<br>
 					Max Passengers: {{ car_instance.car.max_passengers }}<br>

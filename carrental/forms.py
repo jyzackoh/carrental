@@ -48,14 +48,24 @@ class MyModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return str(obj.make_model)
 
+
 class SelectCarForm(forms.Form):
     car = MyModelChoiceField(queryset=Car.objects.all(), to_field_name="make_model")
+
+
+class changeEmailForm(forms.Form):
+    email = forms.EmailField()
+
+
+class changeUserDetailsForm(forms.Form):
+    contact = forms.CharField(max_length=8, required=False)
+    address = forms.CharField(max_length=512, required=False)
 
 
 class AddCarInstanceForm(forms.ModelForm):
     colour = forms.CharField(required=True, max_length=128)
     price = forms.DecimalField(required=True, decimal_places=2, max_digits=10)
-    candrivemy = forms.BooleanField(required=True)
+    candrivemy = forms.BooleanField(required=False)
     carplate = forms.CharField(required=True, max_length=16)
     year = forms.IntegerField(required=True)
 

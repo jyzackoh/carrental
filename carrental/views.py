@@ -1,4 +1,4 @@
-from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm, changeEmailForm, changeUserDetailsForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -104,3 +104,39 @@ def register(request):
 		'form': form,
 		'user_details_form':user_details_form,
 	})
+
+
+@login_required
+def modify(request): #This one surely must login.
+	user_qrs = list(User.objects.filter(username=request.user))
+	user_qrs = user_qrs[0]
+	flag = False
+
+	print(request.GET)
+	change_email_form = changeEmailForm(request.GET)
+	change_user_details_form = changeUserDetailsForm(request.GET)
+
+	if (change_email_form.is_valid()):
+		new_email = (dict(change_email_form.cleaned_data))['email']
+		if (new_email):
+			user_qrs.email = new_email
+			user_qrs.save()
+
+	if (change_user_details_form.is_valid()):
+		contact = (dict(change_user_details_form.cleaned_data))['contact']
+		address = (dict(change_user_details_form.cleaned_data))['address']
+		print("contact = " + str(contact))
+		print("address = " + str(address))
+		if (contact):
+			user_qrs.userdetails.contact = contact
+			flag = True
+
+		if (address):
+			user_qrs.userdetails.address = address
+			flag = True
+
+		if (flag):
+			user_qrs.userdetails.save()
+
+
+	return redirect("/accounts/user")

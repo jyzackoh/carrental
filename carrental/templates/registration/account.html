@@ -83,10 +83,14 @@
 	      </div>
 	      <div class="modal-body">
 	        <p>Enter your new Email!</p>
+	        <form action="/accounts/modify/" method="get">
+					<input type="email" name="email" class="form-control" placeholder="Enter your new Email Here" id="email"><br>
+					{% csrf_token %}
+					<button type="submit" class="btn" value="modify">Submit</button>
+			</form>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>	
 	      </div>
 	    </div>
 	  </div>
@@ -103,10 +107,15 @@
 	      </div>
 	      <div class="modal-body">
 	        <p>Fill in the fields you would like to modify and leave the rest blank!</p>
+	        <form action="/accounts/modify/" method="get">
+					<input type="text" name="contact" class="form-control" placeholder="Enter your new Contact Number Here" id="contact"><br>
+					<input type="text" name="address" class="form-control" placeholder="Enter your new Address Here" id="address"><br>
+					{% csrf_token %}
+					<button type="submit" class="btn" value="modify">Submit</button>
+			</form>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
 	      </div>
 	    </div>
 	  </div>
