@@ -72,9 +72,10 @@ def account_public(request, username): #Public's view of person's profile
 		return render(request, 'registration/account_public.html', {'valid':False, 'user_details': user_qrs})   
 	
 	user_qrs = user_qrs[0]
-	#pass in owned cars
+	owned_cars = CarInstance.objects.filter(owner=user_qrs)
 	#pass in rented cars
-	return render(request, 'registration/account_public.html', {'valid':True, 'user_details': user_qrs, 'user_id': request.user})
+
+	return render(request, 'registration/account_public.html', {'valid':True, 'user_details': user_qrs, 'user_id': request.user, 'owned_cars': owned_cars})
 
 def rent(request): #This is the processor for renting the car itself. For this, user MUST be logged in.
 	#there should be some query and stuff.
