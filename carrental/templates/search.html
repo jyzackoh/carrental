@@ -9,17 +9,10 @@
 		
 	<!-- input content here -->
 	{% if cars %}
-		<!--<div align="center">
-			<form action="/search" method="get">
-					<input type="text" name="car" class="form-control" placeholder="Search for a car/make/model" id="query"><br>
-					{% csrf_token %}
-					<button type="submit" class="btn" value="login">Search!</button>
-			</form>
-		</div>-->
 
 		<table width="100%">
 			{% for car_instance in cars %}
-			<tr><td><a href="/car/?id={{ car_instance.uuid }}"><h1>{{ car_instance.car.make_model }}</h1></a></td></tr>
+			<tr><td><a href="/car/?id={{ car_instance.carplate }}"><h1>{{ car_instance.car.make_model }}</h1></a></td></tr>
 			<tr>
 				<td>Make/Model: {{ car_instance.car.make_model }}<br>
 					Max Passengers: {{ car_instance.car.max_passengers }}<br>
@@ -35,7 +28,7 @@
 	    		</td>
 				<td>
 	    			Price: ${{ car_instance.price }}/month<br>
-	    			<a href="/car/?id={{ car_instance.uuid }}"><button class="btn btn-primary">More Details!</button></a>
+	    			<a href="/car/?id={{ car_instance.carplate }}"><button class="btn btn-primary">More Details!</button></a>
 				</td>
 				</tr>
 				<tr><td colspan="3"><hr></td></tr>
@@ -44,13 +37,31 @@
 	{% else %}
 		<h1>No Cars Found</h1>
 		<p>The cars you were looking for could not be found. Please try another search term!</p>
-		<div align="center">
-			<form action="/search" method="get">
-					<input type="text" name="query" class="form-control" placeholder="Search for a car/make/model" id="query"><br>
-					{% csrf_token %}
-					<button type="submit" class="btn" value="login">Search!</button>
-			</form>
-		</div>
+		<form id="simpleSearch" action="/search" method="get" align="left">
+			{{ form.as_p }}
+			{% csrf_token %}
+			<a onclick="openDetailedSearch()">More detailed search &or;</a>
+			<button type="submit" class="btn" value="login">Search!</button>
+		</form>
+		<form id="complexSearch" action="/search" method="get" align="left" style="display:none">
+			{{ more_detailed_form.as_p }}
+			{% csrf_token %}
+			<a onclick="closeDetailedSearch()">Less detailed search &and;</a>
+			<button type="submit" class="btn" value="login">Search!</button>
+		</form>
+		
+		<script>
+			function openDetailedSearch() {
+				console.log('clicked');
+				document.getElementById('simpleSearch').style.display = "none";
+				document.getElementById('complexSearch').style.display = "block";
+			}
+			
+			function closeDetailedSearch() {
+				document.getElementById('complexSearch').style.display = "none";
+				document.getElementById('simpleSearch').style.display = "block";
+			}
+		</script>
 	{% endif %}
 
 	</div>
