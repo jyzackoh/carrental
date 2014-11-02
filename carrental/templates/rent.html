@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title%}Car Info{% endblock %}
+
+{% block content %} 
+<div class="col-md-10 col-md-offset-1">
+	
+	<!-- input content here -->
+	{% if valid %}
+		{% if available %}
+			<h1>Car Rented!</h1>
+			<p>Your car has been rented. Click the button below to go to your User Account page to view your rented cars!</p>
+			<a href="/accounts/user/"><button class="btn btn-success">My Account</button></a>
+		{% else %}
+			<h1>Car Not Available!</h1>
+			<p>The Car is not available from {{start}} to {{end}}! Click the button below to try again!</p>
+			<a href="/car/?id={{ carplate }}"><button class="btn btn-success">Try Again</button></a>
+		{% endif %}
+	{% else %}
+		<h1>Request is Invalid!</h1>
+		<p>The request made was invalid! Car does not exist, or you are the owner!</p>
+		<a href="/"><button class="btn btn-success">Back To Search!</button></a>
+	{% endif %}
+
+</div>
+{% endblock %}
