@@ -4,17 +4,18 @@
 
 {% block content %}
 	<div class="col-md-10 col-md-offset-1">
-
+	
+	<h1>Search results</h1>
 		
 	<!-- input content here -->
 	{% if cars %}
-		<div align="center">
+		<!--<div align="center">
 			<form action="/search" method="get">
-					<input type="text" name="query" class="form-control" placeholder="Search for a car/make/model" id="query"><br>
+					<input type="text" name="car" class="form-control" placeholder="Search for a car/make/model" id="query"><br>
 					{% csrf_token %}
 					<button type="submit" class="btn" value="login">Search!</button>
 			</form>
-		</div>
+		</div>-->
 
 		<table width="100%">
 			{% for car_instance in cars %}

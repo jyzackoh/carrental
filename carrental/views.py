@@ -56,10 +56,10 @@ def search(request):
 			if passengers:
 				print "passengers"
 				q &= Q(car__max_passengers=passengers)
-			if type and type !='na':
+			if type and type != 'na':
 				print "type " + type
 				q &= Q(car__type=type)
-			if transmission:
+			if transmission and transmission != 'na':
 				print "transmission"
 				q &= Q(car__transmission=transmission)
 				

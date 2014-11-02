@@ -24,9 +24,9 @@ class CustomRegistrationForm(UserCreationForm):
 
 class UserDetailsForm(forms.ModelForm):
     nric = forms.CharField(required=True, min_length=9)
-    dob = forms.DateField(label="Date of birth (dd/mm/yyyy)", required=True, widget=forms.DateInput(format='%d/%m/%Y'))
+    dob = forms.DateField(label="Date of birth (dd/mm/yyyy)", required=True, input_formats=['%d/%m/%Y'], widget=forms.DateInput(format='%d/%m/%Y'))
     contact = forms.CharField(required=True, min_length=8)
-    license_issue_date = forms.DateField(label="License issue date (dd/mm/yyyy)", required=True, widget=forms.DateInput(format='%d/%m/%Y'))
+    license_issue_date = forms.DateField(label="License issue date (dd/mm/yyyy)", input_formats=['%d/%m/%Y'], required=True, widget=forms.DateInput(format='%d/%m/%Y'))
     address = forms.CharField(required=True)
 
     class Meta:

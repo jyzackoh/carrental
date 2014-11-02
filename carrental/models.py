@@ -5,7 +5,10 @@ import uuid
 
 AUTOMATIC = 'AU'
 MANUAL = 'MA'
+NONE = 'na'
+
 TRANSMISSION_CHOICES = (
+	(NONE, 'Select transmission'),
 	(AUTOMATIC, 'Automatic'),
 	(MANUAL, 'Manual'),
 )
@@ -16,7 +19,7 @@ MPV = 'mv'
 SEDAN = 'se'
 SPORT = 'sp'
 SUV = 'su'
-NONE = 'na'
+
 
 TYPE_CHOICES = (
 	(NONE, 'Select type'),
