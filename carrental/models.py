@@ -19,6 +19,7 @@ MPV = 'mv'
 SEDAN = 'se'
 SPORT = 'sp'
 SUV = 'su'
+CUV = 'cu'
 
 
 TYPE_CHOICES = (
@@ -29,6 +30,7 @@ TYPE_CHOICES = (
 	(SEDAN, 'Sedan'),
 	(SPORT, 'Sport'),
 	(SUV, 'SUV'),
+	(CUV, 'Crossover'),
 )
 
 class Car(models.Model):
