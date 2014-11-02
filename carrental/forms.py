@@ -98,7 +98,7 @@ class SearchCarForm(forms.Form):
     aircon = forms.BooleanField(required=False, label="Got aircon")
     
 class MoreDetailedSearchCarForm(SearchCarForm):
-    color = forms.CharField(max_length=128, required=False)
+    colour = forms.CharField(max_length=128, required=False)
     candrivemy = forms.BooleanField(required=False, label="Can drive to Malaysia")
     year = forms.IntegerField(required=False)
     transmission = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TRANSMISSION_CHOICES))

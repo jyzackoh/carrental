@@ -1,6 +1,7 @@
-from models import Car
-
-
+from models import Car, CarInstance, UserDetails
+from django.contrib.auth.models import User
+from datetime import date
+import uuid
 
 # AUTOMATIC = 'AU'
 # MANUAL = 'MA'
@@ -87,3 +88,49 @@ def popz():
 	Car.objects.create(make_model="Mercedes M-Class", max_passengers=5, transmission="AU", aircon=True, type="su")
 	Car.objects.create(make_model="Mercedes R-Class", max_passengers=5, transmission="AU", aircon=True, type="mv")
 	Car.objects.create(make_model="Mercedes S-Class", max_passengers=5, transmission="AU", aircon=True, type="lu")
+	
+	users = ['John', 'Bill', 'Sarah', 'Katie', 'Jim', 'Pierre', 'Claudia', 'Josh', 'Diablo', 'Horace',
+			'Ben', 'Quentin', 'William', 'Elrond', 'Richard', 'Tina', 'Jonathan',
+			'Carter', 'George', 'Elaine', 'Margery', 'Sam', 'Francis', 'Sylvia',
+			'Rhaegar', 'Tammy', 'Oprah', 'Poincare', 'Abel', 'Descarte', 'Fitzgerald',
+			'Goldburg', 'Henri', 'Justin', 'Kathryn', "L'hopital", 'Xavier', 'Cauchy']
+	
+	cars = Car.objects.all()
+	cars_length = len(cars)
+	cars_start = 0;
+	
+	colours = ['black', 'silver', 'purple', 'pink', 'yellow', 'blue', 'red', 'orange',
+			'green', 'white']
+	
+	colours_length = len(colours)
+	colours_start = 0;
+	
+	for index, user in enumerate(users):
+		email = '%s@%s.com' % (user.lower(), user.lower())
+		password = user.lower() + 'password'
+		nric = 'S%07d%s' % (index, chr(index%26 + 65))
+		dob = date(1970 + index, 1, 1)
+		contact = 91111111 + index
+		license_issue = date(1990 + index, 1, 1)
+		address = user + ' road'
+		
+		new_user = User.objects.create_user(user, email, password)
+		UserDetails.objects.create(user=new_user, nric=nric, dob=dob, 
+								contact=contact, license_issue_date=license_issue,
+								address=address)
+		
+		for i in range(0,2):
+			CarInstance.objects.create(car=cars[cars_start % cars_length],
+									colour=colours[colours_start % colours_length],
+									owner=new_user,
+									price=(1000 + 50*(cars_start%cars_length)),
+									candrivemy=((cars_start%2) == 0),
+									year=(1970 + cars_start%10),
+									carplate='S%s%s%04d%s' % (chr(cars_start%26 + 65),
+														chr((cars_start+5)%26 + 65),
+														cars_start,
+														chr(((cars_start+cars_start/26)%26 + 65))),
+									uuid=uuid.uuid4())
+			cars_start += 1
+			colours_start += 1
+		

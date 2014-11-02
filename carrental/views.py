@@ -27,7 +27,7 @@ def search(request):
 			car = cleaned_data['car']
 			start = cleaned_data['price_lower']
 			end = cleaned_data['price_upper']
-			color = cleaned_data['color']
+			colour = cleaned_data['colour']
 			candrivemy = cleaned_data['candrivemy']
 			year = cleaned_data['year']
 			passengers = cleaned_data['passengers']
@@ -44,9 +44,9 @@ def search(request):
 			if end:
 				print "end"
 				q &= Q(price__lte=end)
-			if color:
+			if colour:
 				print "color"
-				q &= Q(color__iexact=color)
+				q &= Q(colour__iexact=colour)
 			if candrivemy:
 				print "candrivemy"
 				q &= Q(candrivemy=candrivemy)
@@ -55,7 +55,7 @@ def search(request):
 				q &= Q(year=year)
 			if passengers:
 				print "passengers"
-				q &= Q(car__max_passengers=passengers)
+				q &= Q(car__max_passengers__gte=passengers)
 			if type and type != 'na':
 				print "type " + type
 				q &= Q(car__type=type)
