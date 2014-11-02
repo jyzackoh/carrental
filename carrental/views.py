@@ -99,6 +99,23 @@ def car_info(request):
 def account(request): #This one surely must login.
 	user_qrs = list(User.objects.filter(username=request.user))
 	user_qrs = user_qrs[0]
+	show = request.GET.get('show', 'my-account')
+	error = request.GET.get('error', None)
+	error_msg_owned = None
+	error_msg_rented = None
+
+	if error == '1':
+		error_msg_owned = "Unable to delete car listing as it is being rented at the moment!"
+	elif error == '2':
+		error_msg_owned = "Unable to delete car listing as you don't own the car!"
+	elif error == '3':
+		error_msg_owned = "Unable to delete car listing as it does not exist!"
+	elif error == '4':
+		error_msg_rented = "Unable to delete booking as it is ongoing!"
+	elif error == '5':
+		error_msg_rented = "Unable to delete booking as you are not the borrower!"
+	elif error == '6':
+		error_msg_rented = "Unable to delete booking as it does not exist!"
 
 	if request.method == 'POST': #create new user
 		car_form = SelectCarForm(request.POST)
@@ -122,6 +139,9 @@ def account(request): #This one surely must login.
 		'bookings': bookings,
 		'user_details': user_qrs, 
 		'user_id': request.user,
+		'show': show,
+		'error_owned': error_msg_owned,
+		'error_rented': error_msg_rented,
 	})
 
 	# user_qrs = list(User.objects.filter(username=request.user))
@@ -260,11 +280,17 @@ def remove_booking(request): #This one surely must login.
 		booking = list(Booking.objects.filter(q))
 		if (len(booking) > 0):
 			booking = booking[0]
+	else:
+		return redirect("/accounts/user?show=my-rented-cars&error=6")
 
-	if (booking and booking.borrower == user_qrs):
-		booking.delete()
+	if (booking):
+		if (booking.borrower == user_qrs):
+			booking.delete()
+			return redirect("/accounts/user?show=my-rented-cars")
+		else:
+			return redirect("/accounts/user?show=my-rented-cars&error=5")
 
-	return redirect("/accounts/user")
+	return redirect("/accounts/user?show=my-rented-cars&error=4")
 
 @login_required
 def remove_car(request): #This one surely must login.
@@ -280,11 +306,14 @@ def remove_car(request): #This one surely must login.
 		booking = list(Booking.objects.filter(q))
 		if (len(booking) > 0):
 			#cannot delete
-			pass
+			return redirect("/accounts/user/?show=my-cars&error=1")
 		else:
 			#No clashes, delete if user is owner!
 			car_instance = (list(User.objects.filter(carplate=carplate)))[0]
 			if (car_instance.owner == user_qrs):
 				car_instance.delete()
+				return redirect("/accounts/user/?show=my-cars")
+			else:
+				return redirect("/accounts/user/?show=my-cars&error=2")
 
-	return redirect("/accounts/user")
+	return redirect("/accounts/user/?show=my-cars&error=3")

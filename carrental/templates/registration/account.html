@@ -28,6 +28,9 @@
 	<!-- Second Section -->
 	<div id="my-cars" style="display:none">
 		<h1>My Cars</h1>
+		{% if error_owned %}
+			<span style="color:red">{{ error_owned }}</span><br>
+		{% endif %}
 		<button class="btn btn-primary" onclick="toggleAddCarForm()">Add A Car!</button>
 		<div id="add_car_form" style="display:none">
 			<br>
@@ -70,6 +73,9 @@
 	<!-- Third Section -->
 	<div id="my-rented-cars" style="display:none">
 		<h1>My Rented Cars</h1>
+		{% if error_rented %}
+			<span style="color:red">{{ error_rented }}</span><br>
+		{% endif %}
 		<hr>
 		<table width="100%">
 		{% for booking in bookings %}
@@ -167,6 +173,7 @@
 			addCarForm.style.display = 'none';
 		}
 	}
+	showOnly('{{ show }}');
 </script>
 
 {% endblock %}
