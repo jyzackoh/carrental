@@ -96,6 +96,12 @@ class SearchCarForm(forms.Form):
     passengers = forms.IntegerField(label="Number of passengers of at least", required=False)
     type = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TYPE_CHOICES))
     aircon = forms.BooleanField(required=False, label="Got aircon")
+
+
+class RentCarForm(forms.Form):
+    carplate = forms.CharField(max_length=16, required=True)
+    dateStart = forms.CharField(max_length=10, required=True)
+    dateEnd = forms.CharField(max_length=10, required=True)
     
 class MoreDetailedSearchCarForm(SearchCarForm):
     color = forms.CharField(max_length=128, required=False)
