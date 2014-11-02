@@ -2,7 +2,9 @@
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="/static/css/bootstrap.css" />
+		<link rel="stylesheet" href="/static/css/jquery.datetimepicker.css" />
 		<script src="/static/js/jquery.min.js"></script>
+		<script src="/static/js/jquery.datetimepicker.js"></script>
 		<script src="/static/js/bootstrap.js"></script>
 		<title>{% block title %}Car OWN!{% endblock %}</title>
 	</head>
@@ -26,16 +28,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="/">Home</a></li>
 						<li><a href="/search">Search!</a></li>
-						<li><a href="/car">Car Info!</a></li>
-						<li><a href="/rent">Rent!</a></li>
 					</ul>
-					<form class="navbar-form navbar-left" role="search" action="/search" method="get">
-						<div class="form-group">
-							<input type="text" name="car" class="form-control" placeholder="Search A Car">
-							{% csrf_token %}
-						</div>
-						<button type="submit" class="btn btn-default">Submit</button>
-					</form>
 					<ul class="nav navbar-nav navbar-right">
 						{% if user_id.is_authenticated %}
 						<li class="dropdown">
