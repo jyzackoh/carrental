@@ -3,7 +3,7 @@
 {% block title%}Car Info{% endblock %}
 
 {% block content %} 
-<div class="col-md-10 col-md-offset-1">
+<div class="col-md-8 col-md-offset-2">
 	
 	<!-- input content here -->
 	{% if car %}
@@ -11,29 +11,55 @@
 		<h1>{{ car_instance.car.make_model }}</h1>
 		<table width="100%">
 			<tr>
-				<td>Make/Model: {{ car_instance.car.make_model }}<br>
-					Max Passengers: {{ car_instance.car.max_passengers }}<br>
-	    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
-	    			Type: {{ car_instance.car.get_type_display }}<br>
-	    			Colour: {{ car_instance.colour }}<br>
+				<td><strong>Make/Model:</strong> {{ car_instance.car.make_model }}<br>
+					<strong>Max Passengers:</strong> {{ car_instance.car.max_passengers }}<br>
+	    			<strong>Transmission:</strong> {{ car_instance.car.get_transmission_display }}<br>
+	    			<strong>Type:</strong> {{ car_instance.car.get_type_display }}<br>
+	    			<strong>Colour:</strong> {{ car_instance.colour }}
 	    		</td>
 				<td>
-					Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
-	    			Carplate No.: {{ car_instance.carplate }}<br>
-	    			Year: {{ car_instance.year }}<br>
-	    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
+					<strong>Owner:</strong> <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
+	    			<strong>Carplate No.:</strong> {{ car_instance.carplate }}<br>
+	    			<strong>Year:</strong> {{ car_instance.year }}<br>
+	    			<strong>Can Drive to MY:</strong> {{ car_instance.candrivemy }}<br>
+	    			<strong>Price:</strong> ${{ car_instance.price }}/month
 	    		</td>
-				<td>
-	    			Price: ${{ car_instance.price }}/month<br>
-	    			<a href="/rent/?car={{ car_instance.uuid }}"><button class="btn btn-success">Rent!</button></a>
-				</td>
 				</tr>
-				<tr><td colspan="3"><hr></td></tr>
-			{% endfor %}
 		</table>
+
+		<h2>Choose When To Rent!</h2>
+		<form id="rent" action="/rent" method="get" align="left">
+			<div>From: <input id="dateStart" type="text" name="dateStart"> To: <input id="dateEnd" type="text" name="dateEnd"></div><br>
+			<input type="hidden" name="carplate" value="{{ car_instance.carplate }}" id="carplate">
+			<button type="submit" class="btn btn-success">Rent!</button>
+		</form>
+		<hr>
+		{% endfor %}
+
+		<script>
+			jQuery('#dateStart').datetimepicker({
+				format:'Y/m/d',
+				onShow:function( ct ){
+					this.setOptions({
+						maxDate:jQuery('#dateEnd').val()?jQuery('#dateEnd').val():false
+					})
+				},
+				timepicker:false
+			});
+			jQuery('#dateEnd').datetimepicker({
+				format:'Y/m/d',
+				onShow:function( ct ){
+					this.setOptions({
+						minDate:jQuery('#dateStart').val()?jQuery('#dateStart').val():false
+					})
+				},
+				timepicker:false
+			});
+		</script>
+
 	{% else %}
 		<h1>Car Not Found</h1>
-		<p>The Car you were looking for could not be found. Please try again!</p>
+		<p>The Car you were looking for could not be found or is unavailable. Please try again!</p>
 	{% endif %}
 
 </div>
