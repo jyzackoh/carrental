@@ -31,9 +31,9 @@ def popz():
 	Car.objects.create(make_model="Toyota Camry", max_passengers=5, transmission="AU", aircon=True, type="se")
 	Car.objects.create(make_model="Toyota Corona", max_passengers=5, transmission="AU", aircon=True, type="se")
 	Car.objects.create(make_model="Toyota AE86", max_passengers=5, transmission="AU", aircon=True, type="sp")
-	Car.objects.create(make_model="Toyota Wish", max_passengers=7, transmission="AU", aircon=True, type="mpv")
-	Car.objects.create(make_model="Toyota Picnic", max_passengers=7, transmission="AU", aircon=True, type="mpv")
-	Car.objects.create(make_model="Toyota Alphard", max_passengers=6, transmission="AU", aircon=True, type="mpv")
+	Car.objects.create(make_model="Toyota Wish", max_passengers=7, transmission="AU", aircon=True, type="mv")
+	Car.objects.create(make_model="Toyota Picnic", max_passengers=7, transmission="AU", aircon=True, type="mv")
+	Car.objects.create(make_model="Toyota Alphard", max_passengers=6, transmission="AU", aircon=True, type="mv")
 	Car.objects.create(make_model="Toyota Vios", max_passengers=5, transmission="AU", aircon=True, type="se")
 	Car.objects.create(make_model="Toyota Aurius", max_passengers=5, transmission="AU", aircon=True, type="ha")
 

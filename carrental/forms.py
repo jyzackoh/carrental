@@ -1,8 +1,9 @@
 from django import forms            
 from django.contrib.auth.models import User   # fill in custom user info then save it 
-from models import UserDetails, CarInstance, Car
+from models import UserDetails, CarInstance, Car, TYPE_CHOICES, TRANSMISSION_CHOICES
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelChoiceField
+from django.forms.extras.widgets import *
 
 
 class CustomRegistrationForm(UserCreationForm):
@@ -76,3 +77,18 @@ class AddCarInstanceForm(forms.ModelForm):
             car_instance.save()
 
         return car_instance
+    
+
+class SearchCarForm(forms.Form):
+    car = forms.CharField(max_length=64, required=False, label="Make/model")
+    price_lower = forms.DecimalField(decimal_places=2, max_digits=10, required=False, label="Price starting from")
+    price_upper = forms.DecimalField(decimal_places=2, max_digits=10, required=False, label="to")
+    passengers = forms.IntegerField(label="Number of passengers of at least", required=False)
+    type = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TYPE_CHOICES))
+    aircon = forms.BooleanField(required=False, label="Got aircon")
+    
+class MoreDetailedSearchCarForm(SearchCarForm):
+    color = forms.CharField(max_length=128, required=False)
+    candrivemy = forms.BooleanField(required=False, label="Can drive to Malaysia")
+    year = forms.IntegerField(required=False)
+    transmission = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TRANSMISSION_CHOICES))

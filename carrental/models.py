@@ -3,30 +3,33 @@ from django.db.models.fields.related import ForeignKey
 from django.contrib.auth.models import User
 import uuid
 
+AUTOMATIC = 'AU'
+MANUAL = 'MA'
+TRANSMISSION_CHOICES = (
+	(AUTOMATIC, 'Automatic'),
+	(MANUAL, 'Manual'),
+)
+
+HATCHBACK = 'ha'
+LUXURY_SEDAN = 'lu'
+MPV = 'mv'
+SEDAN = 'se'
+SPORT = 'sp'
+SUV = 'su'
+NONE = 'na'
+
+TYPE_CHOICES = (
+	(NONE, 'Select type'),
+	(HATCHBACK, 'Hatchback'),
+	(LUXURY_SEDAN, 'Luxury sedan'),
+	(MPV, 'MPV'),
+	(SEDAN, 'Sedan'),
+	(SPORT, 'Sport'),
+	(SUV, 'SUV'),
+)
+
 class Car(models.Model):
 	"""An abstract car type"""
-	
-	AUTOMATIC = 'AU'
-	MANUAL = 'MA'
-	TRANSMISSION_CHOICES = (
-		(AUTOMATIC, 'Automatic'),
-		(MANUAL, 'Manual'),
-	)
-	
-	HATCHBACK = 'ha'
-	LUXURY_SEDAN = 'lu'
-	MPV = 'mv'
-	SEDAN = 'se'
-	SPORT = 'sp'
-	SUV = 'su'
-	TYPE_CHOICES = (
-		(HATCHBACK, 'Hatchback'),
-		(LUXURY_SEDAN, 'Luxury sedan'),
-		(MPV, 'MPV'),
-		(SEDAN, 'Sedan'),
-		(SPORT, 'Sport'),
-		(SUV, 'SUV'),
-	)
 	
 	make_model = models.CharField(max_length=128, primary_key=True)
 	max_passengers = models.IntegerField()

@@ -1,4 +1,4 @@
-from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm, SearchCarForm, MoreDetailedSearchCarForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -6,16 +6,67 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from models import CarInstance
 from django import forms
+from django.db.models import Q
 
 def index(request):
-	return render(request, 'index.html', {'user_id': request.user})
+	form = SearchCarForm()
+	more_detailed_search_car_form = MoreDetailedSearchCarForm()
+	return render(request, 'index.html', {'user_id': request.user, 
+										'form': form, 
+										'more_detailed_form': more_detailed_search_car_form})
 
 def search(request):
-	query = request.GET.get('query', None)
 	car_qrs = None
-	if (query):
-		car_qrs = CarInstance.objects.filter(car__make_model__contains=query)
+	print "inside search"
+	if request.method == 'GET': #create new user
+		print 'inside request method'
+		form = MoreDetailedSearchCarForm(request.GET)
+		if form.is_valid():
+			print "inside form is valid"
+			cleaned_data = form.cleaned_data
+			car = cleaned_data['car']
+			start = cleaned_data['price_lower']
+			end = cleaned_data['price_upper']
+			color = cleaned_data['color']
+			candrivemy = cleaned_data['candrivemy']
+			year = cleaned_data['year']
+			passengers = cleaned_data['passengers']
+			type = cleaned_data['type']
+			transmission = cleaned_data["transmission"]
+			
+			q = Q()
+			if car:
+				print "car"
+				q &= Q(car__make_model__icontains=car)
+			if start:
+				print "start"
+				q &= Q(price__gte=start)
+			if end:
+				print "end"
+				q &= Q(price__lte=end)
+			if color:
+				print "color"
+				q &= Q(color__iexact=color)
+			if candrivemy:
+				print "candrivemy"
+				q &= Q(candrivemy=candrivemy)
+			if year:
+				print "year"
+				q &= Q(year=year)
+			if passengers:
+				print "passengers"
+				q &= Q(car__max_passengers=passengers)
+			if type and type !='na':
+				print "type " + type
+				q &= Q(car__type=type)
+			if transmission:
+				print "transmission"
+				q &= Q(car__transmission=transmission)
+				
+			car_qrs = CarInstance.objects.filter(q)
+
 	return render(request, 'search.html', {'user_id': request.user, 'cars': car_qrs})
+
 
 def car_info(request):
 	car_uuid = request.GET.get('id', None)

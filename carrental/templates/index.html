@@ -5,11 +5,13 @@
 {% block content %}
 	<div class="col-md-6 col-md-offset-3" align="center">
 		<h1>Welcome To Car OWN!</h1>
-
-		<form action="/search" method="get">
-			<input type="text" name="query" class="form-control" placeholder="Search for a car/make/model" id="query"><br>
+		<br><br>
+		<h3>Search for a car to rent!</h3>
+		<form action="/search" method="get" align="left">
+			{{ form.as_p }}
 			{% csrf_token %}
 			<button type="submit" class="btn" value="login">Search!</button>
 		</form>
+		
 	</div>
 {% endblock %}
