@@ -58,7 +58,7 @@
     		</td>
 			<td>
     			Price: ${{ car_instance.price }}/month<br>
-    			<a href="/delete/CARUUIDHERE"><button class="btn btn-danger">Remove</button></a>
+    			<a href="/car/delete/?id={{ car_instance.carplate }}"><button class="btn btn-danger">Remove</button></a>
 			</td>
 			</tr>
 			<tr><td colspan="3"><hr></td></tr>
@@ -70,6 +70,32 @@
 	<!-- Third Section -->
 	<div id="my-rented-cars" style="display:none">
 		<h1>My Rented Cars</h1>
+		<hr>
+		<table width="100%">
+		{% for booking in bookings %}
+		<tr>
+			<td>Make/Model: {{ booking.car_instance.car.make_model }}<br>
+				Max Passengers: {{ booking.car_instance.car.max_passengers }}<br>
+    			Transmission: {{ booking.car_instance.car.get_transmission_display }}<br>
+    			Type: {{ booking.car_instance.car.get_type_display }}<br>
+    			Colour: {{ booking.car_instance.colour }}<br>
+    		</td>
+			<td>
+				Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ booking.car_instance.owner }}</a><br>
+    			Carplate No.: {{ booking.car_instance.carplate }}<br>
+    			Year: {{ booking.car_instance.year }}<br>
+    			Can Drive to MY: {{ booking.car_instance.candrivemy }}<br>
+    		</td>
+			<td>
+    			Price: ${{ booking.car_instance.price }}/month<br>
+    			Start Date: {{ booking.start }}<br>
+    			End Date: {{ booking.end }}<br>
+    			<a href="/booking/delete/?uuid={{ booking.uuid }}"><button class="btn btn-danger">Cancel</button></a>
+			</td>
+			</tr>
+			<tr><td colspan="3"><hr></td></tr>
+		{% endfor %}
+		</table>
 	</div>
 
 

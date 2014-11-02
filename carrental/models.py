@@ -47,7 +47,6 @@ class Car(models.Model):
 	
 class CarInstance(models.Model):
 	car = ForeignKey('Car', on_delete=models.CASCADE)
-	uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4(), editable=False)
 	colour = models.CharField(max_length=128)
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	price = models.DecimalField(decimal_places=2, max_digits=10)
@@ -56,6 +55,7 @@ class CarInstance(models.Model):
 	carplate = models.CharField(max_length=16, primary_key=True)
 	
 class Booking(models.Model):
+	uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4(), editable=False)
 	start = models.DateField()
 	end = models.DateField()
 	car_instance = ForeignKey('CarInstance', on_delete=models.CASCADE)

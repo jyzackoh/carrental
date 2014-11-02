@@ -21,4 +21,6 @@ urlpatterns = patterns('',
     url(r'^accounts/register/$',  views.register),
     url(r'^accounts/login/$',  login),
     url(r'^accounts/logout/$', logout, {'next_page': '/'}),
+    url(r'^booking/delete/$', views.remove_booking),
+    url(r'^car/delete/$', views.remove_car),
 )
