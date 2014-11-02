@@ -7,11 +7,30 @@
 		<h1>Welcome To Car OWN!</h1>
 		<br><br>
 		<h3>Search for a car to rent!</h3>
-		<form action="/search" method="get" align="left">
+		<form id="simpleSearch" action="/search" method="get" align="left">
 			{{ form.as_p }}
 			{% csrf_token %}
+			<a onclick="openDetailedSearch()">More detailed search &or;</a>
 			<button type="submit" class="btn" value="login">Search!</button>
 		</form>
-		
+		<form id="complexSearch" action="/search" method="get" align="left" style="display:none">
+			{{ more_detailed_form.as_p }}
+			{% csrf_token %}
+			<a onclick="closeDetailedSearch()">Less detailed search &and;</a>
+			<button type="submit" class="btn" value="login">Search!</button>
+		</form>
 	</div>
+	
+	<script>
+		function openDetailedSearch() {
+			console.log('clicked');
+			document.getElementById('simpleSearch').style.display = "none";
+			document.getElementById('complexSearch').style.display = "block";
+		}
+		
+		function closeDetailedSearch() {
+			document.getElementById('complexSearch').style.display = "none";
+			document.getElementById('simpleSearch').style.display = "block";
+		}
+	</script>
 {% endblock %}
