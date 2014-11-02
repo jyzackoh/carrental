@@ -95,16 +95,17 @@ class SearchCarForm(forms.Form):
     price_upper = forms.DecimalField(decimal_places=2, max_digits=10, required=False, label="to")
     passengers = forms.IntegerField(label="Number of passengers of at least", required=False)
     type = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TYPE_CHOICES))
-    aircon = forms.BooleanField(required=False, label="Got aircon", initial=True)
 
 
 class RentCarForm(forms.Form):
     carplate = forms.CharField(max_length=16, required=True)
     dateStart = forms.CharField(max_length=10, required=True)
     dateEnd = forms.CharField(max_length=10, required=True)
+
     
 class MoreDetailedSearchCarForm(SearchCarForm):
     colour = forms.CharField(max_length=128, required=False)
-    candrivemy = forms.BooleanField(required=False, label="Can drive to Malaysia")
+    candrivemy = forms.NullBooleanField(required=False, label="Can drive to Malaysia", initial=None)
     year = forms.IntegerField(required=False)
     transmission = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TRANSMISSION_CHOICES))
+    aircon = forms.NullBooleanField(required=False, label="Got aircon", initial=None)
