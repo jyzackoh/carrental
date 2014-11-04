@@ -141,12 +141,14 @@ def account(request): #This one surely must login.
 	car_form = SelectCarForm()
 	car_instances = CarInstance.objects.filter(owner=user_qrs)
 	bookings = Booking.objects.filter(borrower=user_qrs)
+	owned_bookings = Booking.objects.filter(car_instance__owner=user_qrs)
 
 	return render(request, "registration/account.html", {
 		'form': form,
 		'car_form': car_form,
 		'car_instances': car_instances,
 		'bookings': bookings,
+		'owned_bookings': owned_bookings,
 		'user_details': user_qrs, 
 		'user_id': request.user,
 		'show': show,

@@ -46,23 +46,34 @@
 		<hr>
 		<table width="100%">
 		{% for car_instance in car_instances %}
-		<tr>
-			<td>Make/Model: {{ car_instance.car.make_model }}<br>
-				Max Passengers: {{ car_instance.car.max_passengers }}<br>
-    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
-    			Type: {{ car_instance.car.get_type_display }}<br>
-    			Colour: {{ car_instance.colour }}<br>
-    		</td>
-			<td>
-				Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
-    			Carplate No.: {{ car_instance.carplate }}<br>
-    			Year: {{ car_instance.year }}<br>
-    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
-    		</td>
-			<td>
-    			Price: ${{ car_instance.price }}/month<br>
-    			<a href="/car/delete/?id={{ car_instance.carplate }}"><button class="btn btn-danger">Remove</button></a>
-			</td>
+			<tr><td colspan="3"><h2>{{ car_instance.car.make_model }}</h2></td></tr>
+			<tr>
+				<td>
+					Max Passengers: {{ car_instance.car.max_passengers }}<br>
+	    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
+	    			Type: {{ car_instance.car.get_type_display }}<br>
+	    			Colour: {{ car_instance.colour }}<br>
+	    		</td>
+				<td>
+					Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
+	    			Carplate No.: {{ car_instance.carplate }}<br>
+	    			Year: {{ car_instance.year }}<br>
+	    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
+	    		</td>
+				<td>
+	    			Price: ${{ car_instance.price }}/month<br>
+	    			<a href="/car/delete/?id={{ car_instance.carplate }}"><button class="btn btn-danger">Remove</button></a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<h3>Bookings for this car:</h3>
+					{% for booking in owned_bookings %}
+						{% if booking.car_instance.carplate == car_instance.carplate %}
+							<p>Booked by {{ booking.borrower }} from {{ booking.start }} to {{ booking.end }}</p>
+						{% endif %}
+					{% endfor %}
+				</td>
 			</tr>
 			<tr><td colspan="3"><hr></td></tr>
 		{% endfor %}
