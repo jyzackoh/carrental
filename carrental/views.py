@@ -1,4 +1,4 @@
-from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm, changeEmailForm, changeUserDetailsForm, SearchCarForm, MoreDetailedSearchCarForm, RentCarForm
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm, ChangeEmailForm, ChangeBookingForm, ChangeUserDetailsForm, SearchCarForm, MoreDetailedSearchCarForm, RentCarForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -101,6 +101,8 @@ def account(request): #This one surely must login.
 	user_qrs = user_qrs[0]
 	show = request.GET.get('show', 'my-account')
 	error = request.GET.get('error', None)
+	start = request.GET.get('start', None)
+	end = request.GET.get('end', None)
 	error_msg_owned = None
 	error_msg_rented = None
 
@@ -116,6 +118,14 @@ def account(request): #This one surely must login.
 		error_msg_rented = "Unable to delete booking as you are not the borrower!"
 	elif error == '6':
 		error_msg_rented = "Unable to delete booking as it does not exist!"
+	elif error == '7':
+		error_msg_rented = "Your Request was not understood! Please contact admin for assistance."
+	elif error == '8':
+		error_msg_rented = "Unable to modify booking as it is ongoing!"
+	elif error == '9':
+		error_msg_rented = "Unable to modify booking as car is not available from " + start + "to " + end + "!"
+	elif error == '10':
+		error_msg_rented = "Unable to modify booking as you are not the borrower!"
 
 	if request.method == 'POST': #create new user
 		car_form = SelectCarForm(request.POST)
@@ -240,8 +250,8 @@ def modify(request): #This one surely must login.
 	user_qrs = user_qrs[0]
 	flag = False
 
-	change_email_form = changeEmailForm(request.GET)
-	change_user_details_form = changeUserDetailsForm(request.GET)
+	change_email_form = ChangeEmailForm(request.GET)
+	change_user_details_form = ChangeUserDetailsForm(request.GET)
 
 	if (change_email_form.is_valid()):
 		new_email = (dict(change_email_form.cleaned_data))['email']
@@ -264,6 +274,67 @@ def modify(request): #This one surely must login.
 			user_qrs.userdetails.save()
 
 	return redirect("/accounts/user")
+
+
+@login_required
+def modify_booking(request): #This one surely must login.
+	user_qrs = (list(User.objects.filter(username=request.user)))[0]
+	booking = None
+	today = datetime.now()
+
+	#Check if form valid
+	change_booking_form = ChangeBookingForm(request.GET)
+	if (change_booking_form.is_valid()):
+	
+		#Get the data
+		keys = (dict(change_booking_form.cleaned_data))
+		new_start = keys['dateStart']
+		new_end = keys['dateEnd']
+		uuid = keys['uuid_hidden']
+
+		new_start = (datetime.strptime(new_start, "%Y/%m/%d")).date()
+		new_end = (datetime.strptime(new_end, "%Y/%m/%d")).date()
+
+		print(new_start)
+		print(new_end)
+		print(uuid)
+
+		#Only assign booking iff booking is before or after today
+		q = Q()
+		q &= Q(uuid=uuid)
+		q2 = Q(start__gt=today)
+		q2 |= Q(end__lt=today)
+		q &= q2
+		booking = list(Booking.objects.filter(q))
+		if (len(booking) > 0):
+			booking = booking[0]
+		else:
+			booking = None;
+
+		#availability check
+		if (booking):		
+			#check if car available on new date range
+			q = Q()
+			q &= Q(car_instance__carplate=booking.car_instance.carplate)
+			q &= Q(start__gte=new_start)
+			q &= Q(end__lte=new_end)
+			clashed_bookings = list(Booking.objects.filter(q))
+
+
+			if (len(clashed_bookings) == 0): #new period is available and the booking is not ongoing
+				if (booking.borrower == user_qrs):
+					booking.start = new_start
+					booking.end = new_end
+					booking.save()
+					return redirect("/accounts/user?show=my-rented-cars")
+				else:
+					return redirect("/accounts/user?show=my-rented-cars&error=10") #item does not belong to you
+			else:
+				return redirect("/accounts/user?show=my-rented-cars&error=9&start="+new_start+"&end="+new_end) #Some error saying the chosen date is unavailable
+		else:
+			return redirect("/accounts/user?show=my-rented-cars&error=8") #some error message saying the booking is ongoing.
+
+	return redirect("/accounts/user?show=my-rented-cars&error=7") #invalid request
 
 @login_required
 def remove_booking(request): #This one surely must login.

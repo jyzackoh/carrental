@@ -44,7 +44,9 @@
 						maxDate:jQuery('#dateEnd').val()?jQuery('#dateEnd').val():false
 					})
 				},
-				timepicker:false
+				timepicker:false,
+				closeOnDateSelect:true,
+				minDate:0
 			});
 			jQuery('#dateEnd').datetimepicker({
 				format:'Y/m/d',
@@ -53,7 +55,9 @@
 						minDate:jQuery('#dateStart').val()?jQuery('#dateStart').val():false
 					})
 				},
-				timepicker:false
+				timepicker:false,
+				closeOnDateSelect:true,
+				minDate:0
 			});
 		</script>
 

@@ -96,6 +96,7 @@
     			Price: ${{ booking.car_instance.price }}/month<br>
     			Start Date: {{ booking.start }}<br>
     			End Date: {{ booking.end }}<br>
+    			<button class="btn btn-primary" data-toggle="modal" data-target="#bookingModModal" onclick="change_uuid_hidden('{{ booking.uuid }}');">Modify</button>
     			<a href="/booking/delete/?uuid={{ booking.uuid }}"><button class="btn btn-danger">Cancel</button></a>
 			</td>
 			</tr>
@@ -154,6 +155,29 @@
 	</div>
 
 
+	<div class="modal fade" id="bookingModModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Change User Details</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>What dates would you like to modify your booking to?</p>
+	        <form action="/booking/modify/" method="get">
+			        <div>From: <input id="dateStart" type="text" name="dateStart"> To: <input id="dateEnd" type="text" name="dateEnd"></div><br>
+					<input type="hidden" name="uuid_hidden" class="form-control" id="uuid_hidden" value="123">
+					{% csrf_token %}
+					<button type="submit" class="btn" value="modify">Submit</button>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 </div>
 
 <script>
@@ -173,7 +197,36 @@
 			addCarForm.style.display = 'none';
 		}
 	}
+
+	function change_uuid_hidden(uuid) {
+		document.getElementById("uuid_hidden").value = uuid;
+	}
 	showOnly('{{ show }}');
+
+
+	jQuery('#dateStart').datetimepicker({
+		format:'Y/m/d',
+		onShow:function( ct ){
+			this.setOptions({
+				maxDate:jQuery('#dateEnd').val()?jQuery('#dateEnd').val():false
+			})
+		},
+		timepicker:false,
+		closeOnDateSelect:true,
+		minDate:0
+	});
+	jQuery('#dateEnd').datetimepicker({
+		format:'Y/m/d',
+		onShow:function( ct ){
+			this.setOptions({
+				minDate:jQuery('#dateStart').val()?jQuery('#dateStart').val():false
+			})
+		},
+		timepicker:false,
+		closeOnDateSelect:true,
+		minDate:0
+	});
+
 </script>
 
 {% endblock %}

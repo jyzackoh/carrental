@@ -54,14 +54,18 @@ class SelectCarForm(forms.Form):
     car = MyModelChoiceField(queryset=Car.objects.all(), to_field_name="make_model")
 
 
-class changeEmailForm(forms.Form):
+class ChangeEmailForm(forms.Form):
     email = forms.EmailField()
 
 
-class changeUserDetailsForm(forms.Form):
+class ChangeUserDetailsForm(forms.Form):
     contact = forms.CharField(max_length=8, required=False)
     address = forms.CharField(max_length=512, required=False)
 
+class ChangeBookingForm(forms.Form):
+    dateStart = forms.CharField(max_length=10, required=True)
+    dateEnd = forms.CharField(max_length=10, required=True)
+    uuid_hidden = forms.CharField(max_length=36, required=True)
 
 class AddCarInstanceForm(forms.ModelForm):
     colour = forms.CharField(required=True, max_length=128)
