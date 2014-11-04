@@ -55,7 +55,7 @@ class CarInstance(models.Model):
 	carplate = models.CharField(max_length=16, primary_key=True)
 	
 class Booking(models.Model):
-	uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4(), editable=False)
+	uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4, editable=False)
 	start = models.DateField()
 	end = models.DateField()
 	car_instance = ForeignKey('CarInstance', on_delete=models.CASCADE)

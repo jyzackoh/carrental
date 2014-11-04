@@ -129,8 +129,8 @@ def popz():
 									carplate='S%s%s%04d%s' % (chr(cars_start%26 + 65),
 														chr((cars_start+5)%26 + 65),
 														cars_start,
-														chr(((cars_start+cars_start/26)%26 + 65))),
-									uuid=uuid.uuid4())
+														chr(((cars_start+cars_start/26)%26 + 65)))
+									)
 			cars_start += 1
 			colours_start += 1
 		
