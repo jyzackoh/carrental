@@ -1,6 +1,6 @@
-from models import Car, CarInstance, UserDetails
+from models import Car, CarInstance, UserDetails, Booking
 from django.contrib.auth.models import User
-from datetime import date
+from datetime import date, timedelta
 import uuid
 
 # AUTOMATIC = 'AU'
@@ -91,9 +91,19 @@ def popz():
 	
 	users = ['John', 'Bill', 'Sarah', 'Katie', 'Jim', 'Pierre', 'Claudia', 'Josh', 'Diablo', 'Horace',
 			'Ben', 'Quentin', 'William', 'Elrond', 'Richard', 'Tina', 'Jonathan',
-			'Carter', 'George', 'Elaine', 'Margery', 'Sam', 'Francis', 'Sylvia',
+			'George', 'Elaine', 'Margery', 'Sam', 'Francis', 'Sylvia',
 			'Rhaegar', 'Tammy', 'Oprah', 'Poincare', 'Abel', 'Descarte', 'Fitzgerald',
-			'Goldburg', 'Henri', 'Justin', 'Kathryn', "L'hopital", 'Xavier', 'Cauchy']
+			'Goldburg', 'Henri', 'Justin', 'Kathryn', "L'hopital", 'Xavier', 'Cauchy',
+			'Adam', 'Madison', 'Monroe', 'Jackson', 'Van Buren', 'Harrison', 'Tyler', 'Polk',
+			'Taylor', 'Fillmore', 'Pierce', 'Buchanan', 'Lincoln', 'Johnson', 'Grant', 
+			'Hayes', 'Garfield', 'Arthur', 'Cleveland', 'McKinley', 'Roosevelt', 'Taft',
+			'Wilson', 'Harding', 'Coolidge', 'Hoover', 'Truman', 'Eisenhower', 'Kennedy',
+			'Nixon', 'Carter', 'Reagan', 'Bush', 'Clinton', 'Obama', 'Hilbert', 'Ramanujan',
+			'Noether', 'Weyl', 'Klein', 'Galois', 'Riemann', 'Lagrange', 'Gauss', 'Euler',
+			'Fermat', 'Leibniz', 'Hawking', 'Kendall', 'Feynman', 'Nambu', 'Wheeler', 'Dirac',
+			'Fermi', 'Heisenberg', 'Pauli', 'Bose', 'de Broglie', 'Schrodinger', 'Bohr',
+			'Rutherford', 'Curie', 'Plank', 'Hertz', 'Tesla', 'Lorentz', 'Becqueral',
+			'Boltzmann', 'Maxwell', 'Faraday']
 	
 	cars = Car.objects.all()
 	cars_length = len(cars)
@@ -104,6 +114,7 @@ def popz():
 	
 	colours_length = len(colours)
 	colours_start = 0;
+	prev_cars = [None, None]
 	
 	for index, user in enumerate(users):
 		email = '%s@%s.com' % (user.lower(), user.lower())
@@ -119,8 +130,15 @@ def popz():
 								contact=contact, license_issue_date=license_issue,
 								address=address)
 		
+		if index > 0:
+			for i in range(0,2): #the next person rents the previous person's cars
+				Booking.objects.create(start=date.today()+timedelta(days=i*10),
+									end=date.today()+timedelta(days=i*10+10),
+									car_instance=prev_cars[i],
+									borrower=new_user)
+		
 		for i in range(0,2):
-			CarInstance.objects.create(car=cars[cars_start % cars_length],
+			prev_cars[i] = CarInstance.objects.create(car=cars[cars_start % cars_length],
 									colour=colours[colours_start % colours_length],
 									owner=new_user,
 									price=(1000 + 50*(cars_start%cars_length)),

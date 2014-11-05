@@ -6,7 +6,22 @@
 	<div class="col-md-10 col-md-offset-1">
 	
 	<h1>Search results</h1>
+	
+	<div>
+		<form id="resubmitForm" style="display:none;" action="/search" method="get">
+			{{ resubmit_form.as_p }}
+		</form>
 		
+		<div class="sorts">
+			<h3>Sort by:</h3>
+			<a id="car__make_model" onclick="sort('car__make_model')">Make/model</a>&nbsp;&nbsp;
+			<a id="price" onclick="sort('price')">Price</a>&nbsp;&nbsp;
+			<a id="car__max_passengers" onclick="sort('car__max_passengers')">Max passengers</a>&nbsp;&nbsp;
+			<a id="year" onclick="sort('year')">Year</a>&nbsp;&nbsp;
+			<a id="car__type" onclick="sort('car__type')">Type</a>&nbsp;&nbsp;
+		</div>
+	</div>
+	
 	<!-- input content here -->
 	{% if cars %}
 
@@ -30,8 +45,8 @@
 	    			Price: ${{ car_instance.price }}/month<br>
 	    			<a href="/car/?id={{ car_instance.carplate }}"><button class="btn btn-primary">More Details!</button></a>
 				</td>
-				</tr>
-				<tr><td colspan="3"><hr></td></tr>
+			</tr>
+			<tr><td colspan="3"><hr></td></tr>
 			{% endfor %}
 		</table>
 	{% else %}
@@ -63,6 +78,31 @@
 			}
 		</script>
 	{% endif %}
+	
+	<script>
+		$(document).ready(function(){
+			var prevType = $('#resubmitForm').find("input[name='ordering']").val();
+			if (prevType) {
+				var elemId = '#' + prevType;
+				var upDown = ($('#resubmitForm').find("select[name='ascending']").val() == 2) ? '&and;' : '&or;';
+				$(elemId).html($(elemId).text() + upDown);
+			}
+		});
+	
+		function sort(type) {
+			var prevType = $('#resubmitForm').find("input[name='ordering']").val();
+			if (prevType == type) {
+				console.log('change arrows');
+				var val = $('#resubmitForm').find("select[name='ascending']").val();
+				if (val == 2) $('#resubmitForm').find("select[name='ascending']").val(3);
+				else $('#resubmitForm').find("select[name='ascending']").val(2);
+			} else {
+				$('#resubmitForm').find("select[name='ascending']").val(2);
+				$('#resubmitForm').find("input[name='ordering']").val(type);
+			}
+			$('#resubmitForm').submit();
+		}
+	</script>
 
 	</div>
 {% endblock %}

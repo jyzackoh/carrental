@@ -109,3 +109,5 @@ class MoreDetailedSearchCarForm(SearchCarForm):
     year = forms.IntegerField(required=False)
     transmission = forms.CharField(required=False, max_length=2, widget=forms.Select(choices=TRANSMISSION_CHOICES))
     aircon = forms.NullBooleanField(required=False, label="Got aircon", initial=None)
+    ordering = forms.CharField(required=False, max_length=128)
+    ascending = forms.NullBooleanField(required=False)

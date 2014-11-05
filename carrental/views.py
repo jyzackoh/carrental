@@ -1,4 +1,6 @@
-from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm, SelectCarForm, changeEmailForm, changeUserDetailsForm, SearchCarForm, MoreDetailedSearchCarForm, RentCarForm
+from forms import CustomRegistrationForm, UserDetailsForm, AddCarInstanceForm
+from forms import SelectCarForm, changeEmailForm, changeUserDetailsForm
+from forms import SearchCarForm, MoreDetailedSearchCarForm, RentCarForm
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -36,6 +38,9 @@ def search(request):
 			type = cleaned_data['type']
 			transmission = cleaned_data["transmission"]
 			aircon = cleaned_data['aircon']
+			
+			ordering = cleaned_data['ordering']
+			ascending = cleaned_data['ascending']
 			
 			q = Q()
 			if car:
@@ -80,14 +85,28 @@ def search(request):
 				flag= True
 			if (flag):
 				car_qrs = CarInstance.objects.filter(q)
+				
+				if ordering:
+					print "ordering!"
+					print ordering
+					if ascending:
+						print 'ascending!'
+						print ascending
+						car_qrs = car_qrs.order_by(ordering)
+					else:
+						print "descending!"
+						car_qrs = car_qrs.order_by('-' + ordering)
 			else:
 				car_qrs = None
 
 			form = SearchCarForm()
 			more_detailed_search_car_form = MoreDetailedSearchCarForm()
+			resubmit_form = MoreDetailedSearchCarForm(request.GET)
 
-	return render(request, 'search.html', {'user_id': request.user, 'cars': car_qrs, 'more_detailed_form': more_detailed_search_car_form, 'form':form})
-
+	return render(request, 'search.html', {'user_id': request.user, 'cars': car_qrs, 
+										'more_detailed_form': more_detailed_search_car_form,
+										'form':form,
+										'resubmit_form': resubmit_form})
 
 def car_info(request):
 	carplate = request.GET.get('id', None)
