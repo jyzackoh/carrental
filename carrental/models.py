@@ -45,6 +45,9 @@ class Car(models.Model):
 	type = models.CharField(choices=TYPE_CHOICES,
 							max_length=2)
 	
+	def __unicode__(self):
+		return self.make_model
+	
 class CarInstance(models.Model):
 	car = ForeignKey('Car', on_delete=models.CASCADE)
 	colour = models.CharField(max_length=128)
@@ -53,6 +56,9 @@ class CarInstance(models.Model):
 	candrivemy = models.BooleanField()
 	year = models.IntegerField()
 	carplate = models.CharField(max_length=16, primary_key=True)
+	
+	def __unicode__(self):
+		return self.carplate
 	
 class Booking(models.Model):
 	uuid = models.CharField(max_length=36, unique=True, default=uuid.uuid4, editable=False)
@@ -68,3 +74,6 @@ class UserDetails(models.Model):
 	contact = models.CharField(max_length=8)
 	license_issue_date = models.DateField()
 	address = models.CharField(max_length=512)
+	
+	class Meta:
+		verbose_name_plural = 'User Details'
