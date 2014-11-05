@@ -46,23 +46,34 @@
 		<hr>
 		<table width="100%">
 		{% for car_instance in car_instances %}
-		<tr>
-			<td>Make/Model: {{ car_instance.car.make_model }}<br>
-				Max Passengers: {{ car_instance.car.max_passengers }}<br>
-    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
-    			Type: {{ car_instance.car.get_type_display }}<br>
-    			Colour: {{ car_instance.colour }}<br>
-    		</td>
-			<td>
-				Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
-    			Carplate No.: {{ car_instance.carplate }}<br>
-    			Year: {{ car_instance.year }}<br>
-    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
-    		</td>
-			<td>
-    			Price: ${{ car_instance.price }}/month<br>
-    			<a href="/car/delete/?id={{ car_instance.carplate }}"><button class="btn btn-danger">Remove</button></a>
-			</td>
+			<tr><td colspan="3"><h2>{{ car_instance.car.make_model }}</h2></td></tr>
+			<tr>
+				<td>
+					Max Passengers: {{ car_instance.car.max_passengers }}<br>
+	    			Transmission: {{ car_instance.car.get_transmission_display }}<br>
+	    			Type: {{ car_instance.car.get_type_display }}<br>
+	    			Colour: {{ car_instance.colour }}<br>
+	    		</td>
+				<td>
+					Owner: <a href="/accounts/user/{{ car_instance.owner }}">{{ car_instance.owner }}</a><br>
+	    			Carplate No.: {{ car_instance.carplate }}<br>
+	    			Year: {{ car_instance.year }}<br>
+	    			Can Drive to MY: {{ car_instance.candrivemy }}<br>
+	    		</td>
+				<td>
+	    			Price: ${{ car_instance.price }}/month<br>
+	    			<a href="/car/delete/?id={{ car_instance.carplate }}"><button class="btn btn-danger">Remove</button></a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<h3>Bookings for this car:</h3>
+					{% for booking in owned_bookings %}
+						{% if booking.car_instance.carplate == car_instance.carplate %}
+							<p>Booked by {{ booking.borrower }} from {{ booking.start }} to {{ booking.end }}</p>
+						{% endif %}
+					{% endfor %}
+				</td>
 			</tr>
 			<tr><td colspan="3"><hr></td></tr>
 		{% endfor %}
@@ -96,6 +107,7 @@
     			Price: ${{ booking.car_instance.price }}/month<br>
     			Start Date: {{ booking.start }}<br>
     			End Date: {{ booking.end }}<br>
+    			<button class="btn btn-primary" data-toggle="modal" data-target="#bookingModModal" onclick="change_uuid_hidden('{{ booking.uuid }}');">Modify</button>
     			<a href="/booking/delete/?uuid={{ booking.uuid }}"><button class="btn btn-danger">Cancel</button></a>
 			</td>
 			</tr>
@@ -154,6 +166,29 @@
 	</div>
 
 
+	<div class="modal fade" id="bookingModModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Change User Details</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>What dates would you like to modify your booking to?</p>
+	        <form action="/booking/modify/" method="get">
+			        <div>From: <input id="dateStart" type="text" name="dateStart"> To: <input id="dateEnd" type="text" name="dateEnd"></div><br>
+					<input type="hidden" name="uuid_hidden" class="form-control" id="uuid_hidden" value="123">
+					{% csrf_token %}
+					<button type="submit" class="btn" value="modify">Submit</button>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 </div>
 
 <script>
@@ -173,7 +208,36 @@
 			addCarForm.style.display = 'none';
 		}
 	}
+
+	function change_uuid_hidden(uuid) {
+		document.getElementById("uuid_hidden").value = uuid;
+	}
 	showOnly('{{ show }}');
+
+
+	jQuery('#dateStart').datetimepicker({
+		format:'Y/m/d',
+		onShow:function( ct ){
+			this.setOptions({
+				maxDate:jQuery('#dateEnd').val()?jQuery('#dateEnd').val():false
+			})
+		},
+		timepicker:false,
+		closeOnDateSelect:true,
+		minDate:0
+	});
+	jQuery('#dateEnd').datetimepicker({
+		format:'Y/m/d',
+		onShow:function( ct ){
+			this.setOptions({
+				minDate:jQuery('#dateStart').val()?jQuery('#dateStart').val():false
+			})
+		},
+		timepicker:false,
+		closeOnDateSelect:true,
+		minDate:0
+	});
+
 </script>
 
 {% endblock %}
