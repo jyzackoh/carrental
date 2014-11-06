@@ -7,6 +7,17 @@
 		<script src="/static/js/jquery.datetimepicker.js"></script>
 		<script src="/static/js/bootstrap.js"></script>
 		<title>{% block title %}Car OWN!{% endblock %}</title>
+		
+		<script>
+			$(document).ready(function(){
+				function hide(input){
+					input.closest('p').hide();
+				}
+				
+				hide($("input[name='ordering']"));
+				hide($("select[name='ascending']"));
+			});
+		</script>
 	</head>
 
 	<body>
