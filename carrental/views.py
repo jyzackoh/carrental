@@ -399,7 +399,7 @@ def remove_car(request): #This one surely must login.
 			return redirect("/accounts/user/?show=my-cars&error=1")
 		else:
 			#No clashes, delete if user is owner!
-			car_instance = (list(User.objects.filter(carplate=carplate)))[0]
+			car_instance = (list(CarInstance.objects.filter(carplate=carplate)))[0]
 			if (car_instance.owner == user_qrs):
 				car_instance.delete()
 				return redirect("/accounts/user/?show=my-cars")
