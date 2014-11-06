@@ -10,7 +10,7 @@
 		{% if available %}
 			<h1>Car Rented!</h1>
 			<p>Your car has been rented. Click the button below to go to your User Account page to view your rented cars!</p>
-			<a href="/accounts/user/"><button class="btn btn-success">My Account</button></a>
+			<a href="/accounts/user/?show=my-rented-cars"><button class="btn btn-success">My Account</button></a>
 		{% else %}
 			<h1>Car Not Available!</h1>
 			<p>The Car is not available from {{start}} to {{end}}! Click the button below to try again!</p>
