@@ -237,9 +237,9 @@ def rent(request): #This is the processor for renting the car itself. For this, 
 			#availability check
 			if (len(clashed_bookings) == 0):
 				Booking.objects.create(start=start, end=end, car_instance=car_instance, borrower=user_qrs)
-				return render(request, 'rent.html', {'valid':True, 'available': True, 'start':start, 'end':end, 'carplate':carplate})
+				return render(request, 'rent.html', {'valid':True, 'available': True, 'start':start, 'end':end, 'user_id': request.user, 'carplate':carplate})
 			else:
-				return render(request, 'rent.html', {'valid':True, 'available': False, 'start':start, 'end':end, 'carplate':carplate})
+				return render(request, 'rent.html', {'valid':True, 'available': False, 'start':start, 'end':end, 'user_id': request.user, 'carplate':carplate})
 
 	return redirect("/")
 
@@ -349,7 +349,7 @@ def modify_booking(request): #This one surely must login.
 				else:
 					return redirect("/accounts/user?show=my-rented-cars&error=10") #item does not belong to you
 			else:
-				return redirect("/accounts/user?show=my-rented-cars&error=9&start="+new_start+"&end="+new_end) #Some error saying the chosen date is unavailable
+				return redirect("/accounts/user?show=my-rented-cars&error=9&start="+str(new_start)+"&end="+str(new_end)) #Some error saying the chosen date is unavailable
 		else:
 			return redirect("/accounts/user?show=my-rented-cars&error=8") #some error message saying the booking is ongoing.
 
